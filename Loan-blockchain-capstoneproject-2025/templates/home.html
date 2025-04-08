@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blockchain Loan System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+      :root {
+    --primary-blue: #00b4d8; /* Vibrant cyan blue */
+    --secondary-blue: #48cae4; /* Soft, cool blue */
+    --accent-green: #2ecc71; /* Fresh, vivid green */
+    --danger-red: #ff6b6b; /* Subtle but clear red */
+    --text-primary: rgb(251, 255, 253); /* Soft, near-white text */
+
+    --glass-bg: rgba(173, 232, 244, 0.2); /* Softer glass effect */
+    --glass-border: rgba(48, 176, 199, 0.5); /* Consistent border glass tone */
+    --font-primary: 'Inter', sans-serif;
+    --font-secondary: 'Space Grotesk', sans-serif;
+}
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow-x: hidden;
+            min-height: 100vh;
+            font-family: var(--font-primary);
+            line-height: 1.6;
+        }
+
+        /* Perfect Video Background */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            object-fit: cover;
+            filter: brightness(0.4) contrast(1.2);
+        }
+
+        /* Main Container */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            padding: 2rem;
+        }
+
+        /* Navigation */
+        .top-nav {
+            padding: 1.5rem;
+            background: rgba(16, 36, 62, 0.95);
+            backdrop-filter: blur(15px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            border-bottom: 2px solid var(--glass-border);
+            animation: navSlide 1s ease-out;
+        }
+
+        .top-nav h2 {
+            color: var(--secondary-blue);
+            text-align: center;
+            font-family: var(--font-secondary);
+            font-weight: 600;
+            text-shadow: 0 2px 15px rgba(0, 180, 216, 0.6);
+            background: linear-gradient(to right, 
+                rgba(0, 0, 0, 0.541), 
+                rgba(0, 0, 0, 0.541));
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            margin: 0 auto;
+            max-width: fit-content;
+        }
+
+        /* Main Content */
+        .header-content {
+            text-align: center;
+            padding: 12rem 2rem 4rem;
+        }
+
+        /* Title Design */
+        .project-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            color: var(--text-primary);
+            text-shadow: 0 0 15px rgba(235, 7, 7, 0.795),
+                       0 0 30px rgba(4, 144, 172, 0.37),
+                       0 0 45px rgba(0, 180, 216, 0.322);
+            line-height: 1.1;
+            font-family: var(--font-secondary);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: titleEntrance 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        /* Info Cards */
+        .project-info {
+            margin: 3rem auto;
+            max-width: 800px;
+            opacity: 0;
+            animation: infoEntrance 1s ease-out forwards;
+            animation-delay: 0.8s;
+        }
+
+        .info-card {
+            padding: 2rem;
+            background: var(--glass-bg);
+            border-radius: 20px;
+            margin: 1.5rem 0;
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(216, 7, 7, 0.685);
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(219, 10, 10, 0.801)
+                transparent
+            );
+            transition: 0.6s;
+        }
+
+        .info-card:hover::before {
+            left: 100%;
+        }
+
+        .info-text {
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.877),
+                       0 0 20px rgba(0, 180, 216, 0.3);
+            font-weight: 600;
+            margin: 0.5rem 0;
+        }
+
+        .info-text i {
+            margin-right: 1rem;
+            color: var(--secondary-blue);
+        }
+
+        /* Action Buttons */
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 4rem auto;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
+            animation-delay: 1.2s;
+        }
+
+        .action-btn {
+            padding: 2rem;
+            border-radius: 15px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(230, 5, 5, 0.993)
+                transparent
+            );
+            transition: 0.6s;
+        }
+
+        .action-btn:hover::before {
+            left: 100%;
+        }
+
+        .action-btn i {
+            font-size: 2.8rem;
+            transition: all 0.4s ease;
+            z-index: 1;
+            text-shadow: 0 0 15px currentColor;
+        }
+
+        .btn-text {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--text-primary);
+            z-index: 1;
+            font-family: var(--font-secondary);
+            text-transform: uppercase;
+        }
+
+        .btn-desc {
+            font-size: 1rem;
+            color: var(--text-primary);
+            opacity: 0.9;
+            max-width: 200px;
+            z-index: 1;
+            font-weight: 400;
+        }
+
+        .admin-btn { color: var(--primary-blue); }
+        .repay-btn { color: var(--danger-red); }
+        .approval-btn { color: var(--accent-green); }
+
+        .action-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
+        }
+
+        .action-btn:hover i {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        /* Animations */
+        @keyframes navSlide {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        @keyframes titleEntrance {
+            0% { opacity: 0; transform: translateY(30px) scale(0.9); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes infoEntrance {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .header-content {
+                padding: 8rem 1rem 2rem;
+            }
+
+            .project-title {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+
+            .info-text {
+                font-size: 1.2rem;
+            }
+
+            .button-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .action-btn {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <video class="video-background" autoplay muted loop>
+        <source src="https://cdn.pixabay.com/video/2024/08/03/224695_large.mp4" type="video/mp4">
+    </video>
+
+    <nav class="top-nav">
+        <div class="container">
+            <h2>Blockchain-Driven Financial Accessibility:A DECENTRALIZED DeFi Microloan Platform for Inclusive and Transparent Lending</h2>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="header-content">
+            <h1 class="project-title">
+                CAPSTONE PROJECT 2025
+            </h1>
+
+            <div class="project-info">
+                <div class="info-card">
+                    <p class="info-text">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        Project Guide: Prof. Dr. Noel Jeygar Robert (Scope) 
+                    </p>
+                </div>
+
+                <div class="info-card">
+                    <p class="info-text">
+                        <i class="fas fa-user-graduate"></i>
+                           Name: PREM KUMAR S
+
+                    </p>
+                    <p class="info-text">
+                        <i class="fas fa-id-card"></i>
+                        Registration No: 20MIS1179
+                    </p>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <a href="/payment" class="action-btn admin-btn">
+                    <i class="fas fa-university"></i>
+                    <span class="btn-text">Admin Portal</span>
+                    <span class="btn-desc">System Management</span>
+                </a>
+
+                <a href="/repayment" class="action-btn repay-btn">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <span class="btn-text">Repay Loan</span>
+                    <span class="btn-desc">Secure Transactions</span>
+                </a>
+
+                <a href="/application" class="action-btn approval-btn">
+                    <i class="fas fa-file-contract"></i>
+                    <span class="btn-text">Loan Approval</span>
+                    <span class="btn-desc">Application System</span>
+                </a>
+               
+            </div>
+        </div>
+    </div>
+    <div class="copyright" style="color:rgb(195, 10, 10); background-color: #333333; padding: 10px; text-align: center; font-size: 14px; border-radius: 8px;">
+        © 2025 VIT Capstone Project 20MIS1179 - Blockchain Loan System
+    </div>
+    <script>
+       
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.project-info, .button-container').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

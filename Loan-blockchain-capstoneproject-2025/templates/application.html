@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Application | VIT 2025</title>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #4f46e5;
+            --accent: #10b981;
+            --background: #0f172a;
+            --text: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--background), #1e293b);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            color: var(--text);
+        }
+
+        .loan-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 640px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: containerSlide 0.6s forwards;
+        }
+
+        @keyframes containerSlide {
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2.5rem;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: formSlide 0.5s forwards;
+        }
+
+        @keyframes formSlide {
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.2s; }
+        .form-group:nth-child(2) { animation-delay: 0.3s; }
+        .form-group:nth-child(3) { animation-delay: 0.4s; }
+        .form-group:nth-child(4) { animation-delay: 0.5s; }
+        .form-group:nth-child(5) { animation-delay: 0.6s; }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        select option {
+            background: var(--background);
+            color: var(--text);
+        }
+
+        .file-upload {
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload.dragover {
+            border-color: var(--accent);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.25rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .submit-btn.loading::after {
+            content: "";
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border: 3px solid #fff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .success-check {
+            display: none;
+            text-align: center;
+            font-size: 4rem;
+            color: var(--accent);
+            animation: checkScale 0.5s ease;
+        }
+
+        @keyframes checkScale {
+            0% { transform: scale(0); }
+            90% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="loan-container">
+        <h1>🚀 Loan Application Form</h1>
+        
+        <form id="loanForm">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Full Name</label>
+                <input type="text" id="applicantName" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-wallet"></i> Loan Amount (USD)</label>
+                <input type="number" id="loanAmount" step="any" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-coins"></i> Ethereum Address</label>
+                <input type="text" id="ethAddress" 
+                     pattern="^0x[a-fA-F0-9]{40}$"
+                     placeholder="0x..."
+                     required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-file-contract"></i> Loan Type</label>
+                <select id="loanType">
+                    <option value="personal">Personal Loan</option>
+                    <option value="business">Business Loan</option>
+                    <option value="crypto">Crypto-backed Loan</option>
+                    <option value="personal">Home Loan</option>
+                    <option value="business">Bike&Car Loan</option>
+                    <option value="crypto">Education Loan</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-folder-open"></i> Documents</label>
+                <div class="file-upload" id="dropZone">
+                    <input type="file" id="documents" multiple accept=".pdf,.doc,.docx,.png,.jpg">
+                    <p>Drag & drop files or click to upload</p>
+                </div>
+                <div id="fileList" class="file-list"></div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <span class="btn-text">Submit Application</span>
+            </button>
+        </form>
+
+        <div class="success-check">✓</div>
+        <div class="copyright">
+            © 2025 VIT Capstone Project 20MIS1179 - Blockchain Loan System
+        </div>
+    </div>
+
+    <script>
+        emailjs.init('x8Mim182r0e3HY0t-');
+
+       
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('documents');
+        const fileList = document.getElementById('fileList');
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileInput.files = e.dataTransfer.files;
+            updateFileList();
+            dropZone.classList.remove('dragover');
+        });
+
+        fileInput.addEventListener('change', updateFileList);
+
+        function updateFileList() {
+            fileList.innerHTML = Array.from(fileInput.files)
+                .map(file => `<div class="file-item">• ${file.name}</div>`)
+                .join('');
+        }
+
+        
+        document.getElementById('loanForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.querySelector('.submit-btn');
+            const form = e.target;
+
+            
+            if (!form.checkValidity()) return;
+
+            btn.innerHTML = '<span class="btn-text">Processing...</span>';
+            btn.classList.add('loading');
+
+            try {
+                
+                await emailjs.send('service_yrapzs9', 'template_sn0icpv', {
+                    name: document.getElementById('applicantName').value,
+                    amount: document.getElementById('loanAmount').value + ' USD',
+                    eth_address: document.getElementById('ethAddress').value,
+                    loan_type: document.getElementById('loanType').value,
+                    documents: Array.from(fileInput.files).map(f => f.name).join(', '),
+                    date: new Date().toLocaleString()
+                });
+
+                
+                form.style.display = 'none';
+                document.querySelector('.success-check').style.display = 'block';
+                document.querySelector('.copyright').style.marginTop = '4rem';
+                
+                
+                setTimeout(() => {
+                    form.reset();
+                    form.style.display = 'block';
+                    document.querySelector('.success-check').style.display = 'none';
+                    fileList.innerHTML = '';
+                }, 3000);
+            } catch (error) {
+                alert('Error submitting form: ' + error.message);
+            } finally {
+                btn.classList.remove('loading');
+                btn.innerHTML = '<span class="btn-text">Submit Application</span>';
+            }
+        });
+    </script>
+</body>
+</html>
