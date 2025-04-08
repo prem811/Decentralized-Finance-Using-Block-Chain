@@ -1,5 +1,6 @@
 # Decentralized-Finance-Using-Block-Chain
 How This Project Works: 
+
 This project operates on a blockchain platform where:
  
 • A borrower submits an application with details such as their Ethereum address. 
